@@ -1,0 +1,32 @@
+{
+  "name": "synced-synth",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^2.0.4",
+    "@tsconfig/svelte": "^4.0.1",
+    "svelte": "^3.58.0",
+    "svelte-check": "^3.3.1",
+    "tslib": "^2.5.0",
+    "typescript": "^5.0.2",
+    "vite": "^4.3.9",
+    "vite-plugin-top-level-await": "^1.4.4",
+    "vite-plugin-wasm": "^3.3.0"
+  },
+  "dependencies": {
+    "@automerge/automerge": "^2.2.8",
+    "@automerge/automerge-repo": "^1.2.1",
+    "@automerge/automerge-repo-network-broadcastchannel": "^1.2.1",
+    "@automerge/automerge-repo-network-websocket": "^1.2.1",
+    "@automerge/automerge-repo-storage-indexeddb": "^1.2.1",
+    "@automerge/automerge-repo-svelte-store": "^1.2.1",
+    "tone": "^15.0.4"
+  }
+}
