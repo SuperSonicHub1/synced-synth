@@ -59,7 +59,7 @@
 </script>
 
 <main>
-  <h1>Vite + Svelte</h1>
+  <h1>Synced Synth</h1>
 
   <div class="card">
     {#if ready}
