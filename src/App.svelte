@@ -15,6 +15,7 @@
     import FilterCutoff from "./lib/FilterCutoff.svelte";
     import FilterType from "./lib/FilterType.svelte";
     import { get } from "svelte/store";
+    import FilterQ from "./lib/FilterQ.svelte";
   
   const repo = new Repo({
     storage: new IndexedDBStorageAdapter("synced-synth"),
@@ -66,6 +67,7 @@
           <Bpm doc={d}/>
           <FilterType doc={d} />
           <FilterCutoff doc={d} />
+          <FilterQ doc={d} />
         </section>
         <section class="grid" style="grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(2, 1fr)">
           {#each new Array(16).fill(0).map((_, i) => i) as index}
