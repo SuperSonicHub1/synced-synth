@@ -24,8 +24,6 @@ export type SyncedSynth = {
 	filterType: FilterType,
 	filterCutoff: number,
 	filterQ: number,
-	// TODO: Tone.Filter lacks a resonance knob
-	// filterResonance: number,
 
 	vcaAttack: number,
 	vcaDecay: number,
