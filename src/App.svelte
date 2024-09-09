@@ -6,8 +6,15 @@
   import { BrowserWebSocketClientAdapter } from "@automerge/automerge-repo-network-websocket"
   import * as Tone from "tone";
   
-  import { type SyncedSynth } from './lib/model'
+  import { defaultState, type SyncedSynth } from './lib/model'
   import { onDestroy } from 'svelte';
+  import { Synthesizer } from "./lib/synth";
+    import WaveShapeSelector from "./lib/WaveShapeSelector.svelte";
+    import Step from "./lib/Step.svelte";
+    import Bpm from "./lib/BPM.svelte";
+    import FilterCutoff from "./lib/FilterCutoff.svelte";
+    import FilterType from "./lib/FilterType.svelte";
+    import { get } from "svelte/store";
   
   const repo = new Repo({
     storage: new IndexedDBStorageAdapter("synced-synth"),
@@ -20,40 +27,28 @@
   const rootDocUrl = document.location.hash.substring(1);
   let trueUrl = isValidAutomergeUrl(rootDocUrl)
     ? repo.find(rootDocUrl).url
-    : repo.create<SyncedSynth>({ frequency: 440 }).url
+    : repo.create<SyncedSynth>(defaultState()).url
   document.location.hash = trueUrl
   const d = doc<SyncedSynth>(trueUrl, repo)
-
-  function changeFreq(e: Event) {
-    d.change((d) => {
-      d.frequency = parseFloat((e.target as HTMLInputElement).value)
-    })
-  }
-
+  
+  let synth = new Synthesizer(defaultState())
+  
+  let synthUnsubscribe: () => void
   let ready = false
-
-
-  let freqUnsubscribe: () => void
-
   async function start() {
     await Tone.start()
-    
-    const osc = new Tone.Oscillator($d.frequency, "sine")
-      .toDestination()
-      .start();
+    synth.start()
 
-    freqUnsubscribe = d.subscribe(d => {
-      console.log(d)
-      if (d) {
-        osc.frequency.value = d.frequency
-      }
+    synthUnsubscribe = d.subscribe(d => {
+      if (d) synth.update(d)
     })
 
     ready = true
   }
 
   onDestroy(() => {
-    if (freqUnsubscribe) freqUnsubscribe()
+    if (synthUnsubscribe) synthUnsubscribe()
+    synth.dispose()
     Tone.getTransport().stop()
   })
 </script>
@@ -63,11 +58,30 @@
 
   <div class="card">
     {#if ready}
-      <p>Frequency: {$d.frequency}</p>
-      <input type="number" value={$d.frequency} min="20" max="20000" step="1" on:input={changeFreq} >
+      <p>Playing!</p>
+      <div class="grid">
+        <section>
+          <WaveShapeSelector oscNumber={1} doc={d} />
+          <WaveShapeSelector oscNumber={2} doc={d} />
+          <Bpm doc={d}/>
+          <FilterType doc={d} />
+          <FilterCutoff doc={d} />
+        </section>
+        <section class="grid" style="grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(2, 1fr)">
+          {#each new Array(16).fill(0).map((_, i) => i) as index}
+            <Step stepNumber={index} doc={d} />
+          {/each}
+        </section>       
+      </div>
     {:else}
       <p>Press button to start synthesizer.</p>
       <button on:click={start}>Start</button>
     {/if}
   </div>
 </main>
+
+<style>
+  .grid {
+    display: grid;
+  }
+</style>

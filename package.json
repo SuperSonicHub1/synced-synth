@@ -28,6 +28,7 @@
     "@automerge/automerge-repo-network-websocket": "^1.2.1",
     "@automerge/automerge-repo-storage-indexeddb": "^1.2.1",
     "@automerge/automerge-repo-svelte-store": "^1.2.1",
+    "tonal": "^6.2.0",
     "tone": "^15.0.4"
   }
 }
